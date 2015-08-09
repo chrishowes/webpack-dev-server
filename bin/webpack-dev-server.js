@@ -37,6 +37,8 @@ var optimist = require("optimist")
 
 	.describe("port", "The port").default("port", 8080)
 
+	.describe("public", "The public hostname/ip address of the server").default("public", "localhost")
+
 	.describe("host", "The hostname/ip address the server will bind to").default("host", "localhost");
 
 require("webpack/bin/config-optimist")(optimist);
@@ -50,6 +52,9 @@ var options = wpOpt.devServer || firstWpOpt.devServer || {};
 
 if(argv.host !== "localhost" || !options.host)
 	options.host = argv.host;
+
+if(argv.public !== "localhost" || !options.public)
+	options.public = argv.public;
 
 if(argv.port !== 8080 || !options.port)
 	options.port = argv.port;
@@ -115,7 +120,7 @@ if(argv["history-api-fallback"])
 var protocol = options.https ? "https" : "http";
 
 if(options.inline) {
-	var devClient = [require.resolve("../client/") + "?" + protocol + "://" + options.host + ":" + options.port];
+	var devClient = [require.resolve("../client/") + "?" + protocol + "://" + options.public + ":" + options.port];
 
 	if(options.hot)
 		devClient.push("webpack/hot/dev-server");
